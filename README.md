@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Customer Churn Prediction using ANN
 
 A deep learning project that predicts whether a bank customer will churn (leave) using an Artificial Neural Network (ANN), with an interactive Streamlit web app for real-time predictions.
@@ -93,3 +94,25 @@ Open `prediction.ipynb` in Jupyter and run all cells to see a sample prediction 
 - Pandas, NumPy
 - Streamlit
 - Matplotlib
+=======
+---
+title: Churn Prediction Model
+emoji: 🚀
+colorFrom: red
+colorTo: red
+sdk: docker
+app_port: 8501
+tags:
+- streamlit
+pinned: false
+short_description: 'Customer churn prediction web app using an ANN trained '
+license: mit
+---
+
+# Welcome to Streamlit!
+
+Edit `/src/streamlit_app.py` to customize this app to your heart's desire. :heart:
+
+If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
+forums](https://discuss.streamlit.io).
+>>>>>>> ec06781699bcc893c46ac47ac88f893b97462bc3
