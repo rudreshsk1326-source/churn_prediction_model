@@ -1,10 +1,25 @@
 import streamlit as st
 import numpy as np
 import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout
 import pandas as pd
 import pickle
 
-model = tf.keras.models.load_model('model.keras')
+def build_model():
+    model = Sequential([
+        Dense(64, activation='relu', input_shape=(12,)),
+        Dropout(0.3),
+        Dense(32, activation='relu'),
+        Dropout(0.3),
+        Dense(16, activation='relu'),
+        Dense(1, activation='sigmoid')
+    ])
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    return model
+
+model = build_model()
+model.load_weights('model_weights.weights.h5')
 
 with open('label_encoder_gender.pkl', 'rb') as f:
     label_encoder_gender = pickle.load(f)

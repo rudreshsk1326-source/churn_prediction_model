@@ -61,5 +61,5 @@ model.fit(X_train_scaled, y_train,
 y_pred = (model.predict(X_test_scaled) > 0.5).astype(int)
 print(classification_report(y_test, y_pred))
 
-model.save('model.h5')
-print('model.h5 saved.')
+model.save_weights('model_weights.weights.h5')
+print('model_weights.weights.h5 saved.')
