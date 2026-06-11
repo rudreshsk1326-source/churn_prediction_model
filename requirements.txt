@@ -1,16 +1,6 @@
-<<<<<<< HEAD
 tensorflow
-pandas 
-numpy 
+pandas
+numpy
 scikit-learn
-tensorboard
-matplotlib
 streamlit
 scikeras
-
-#pip install -r requirements.txt
-=======
-altair
-pandas
-streamlit
->>>>>>> ec06781699bcc893c46ac47ac88f893b97462bc3
