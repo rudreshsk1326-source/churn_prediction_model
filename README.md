@@ -1,14 +1,15 @@
 ---
-title: Streamlit Template Space
+title: Churn Prediction Model
 emoji: 🚀
 colorFrom: red
 colorTo: red
 sdk: docker
 app_port: 8501
 tags:
-  - streamlit
+- streamlit
 pinned: false
-short_description: Streamlit template space
+short_description: 'Customer churn prediction web app using an ANN trained '
+license: mit
 ---
 
 # Welcome to Streamlit!
