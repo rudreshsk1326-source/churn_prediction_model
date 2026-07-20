@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 tensorflow-cpu==2.15.0
+=======
+tensorflow==2.21.0
+keras==3.14.1
+>>>>>>> 669fac47c398156b5944ddfbeab8fb62d7c3323e
 pandas
 numpy
 scikit-learn
