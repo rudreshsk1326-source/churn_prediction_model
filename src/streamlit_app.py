@@ -1,40 +1,62 @@
-import altair as alt
-import numpy as np
-import pandas as pd
 import streamlit as st
+import numpy as np
+import tensorflow as tf
+from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
+import pandas as pd
+import pickle
+import os
 
-"""
-# Welcome to Streamlit!
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:.
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+model = tf.keras.models.load_model(os.path.join(base_dir, 'model.h5'))
 
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+with open(os.path.join(base_dir, 'label_encoder_gender.pkl'), 'rb') as file:
+    label_encoder_gender = pickle.load(file)
 
-num_points = st.slider("Number of points in spiral", 1, 10000, 1100)
-num_turns = st.slider("Number of turns in spiral", 1, 300, 31)
+with open(os.path.join(base_dir, 'onehot_encoder_geo.pkl'), 'rb') as file:
+    onehot_encoder_geo = pickle.load(file)
 
-indices = np.linspace(0, 1, num_points)
-theta = 2 * np.pi * num_turns * indices
-radius = indices
+with open(os.path.join(base_dir, 'scaler.pkl'), 'rb') as file:
+    scaler = pickle.load(file)
 
-x = radius * np.cos(theta)
-y = radius * np.sin(theta)
+st.title('Customer Churn Prediction')
 
-df = pd.DataFrame({
-    "x": x,
-    "y": y,
-    "idx": indices,
-    "rand": np.random.randn(num_points),
-})
+geography = st.selectbox('Geography', onehot_encoder_geo.categories_[0])
+gender = st.selectbox('Gender', label_encoder_gender.classes_)
+age = st.slider('Age', 18, 92)
+balance = st.number_input('Balance')
+credit_score = st.number_input('Credit Score')
+estimated_salary = st.number_input('Estimated Salary')
+tenure = st.slider('Tenure', 0, 10)
+num_of_products = st.slider('Number of Products', 1, 4)
+has_cr_card = st.selectbox('Has Credit Card', [0, 1])
+is_active_member = st.selectbox('Is Active Member', [0, 1])
 
-st.altair_chart(alt.Chart(df, height=700, width=700)
-    .mark_point(filled=True)
-    .encode(
-        x=alt.X("x", axis=None),
-        y=alt.Y("y", axis=None),
-        color=alt.Color("idx", legend=None, scale=alt.Scale()),
-        size=alt.Size("rand", legend=None, scale=alt.Scale(range=[1, 150])),
-    ))
+if st.button('Predict'):
+    input_data = pd.DataFrame({
+        'CreditScore': [credit_score],
+        'Gender': [label_encoder_gender.transform([gender])[0]],
+        'Age': [age],
+        'Tenure': [tenure],
+        'Balance': [balance],
+        'NumOfProducts': [num_of_products],
+        'HasCrCard': [has_cr_card],
+        'IsActiveMember': [is_active_member],
+        'EstimatedSalary': [estimated_salary]
+    })
+
+    geo_encoded = onehot_encoder_geo.transform([[geography]]).toarray()
+    geo_encoded_df = pd.DataFrame(geo_encoded, columns=onehot_encoder_geo.get_feature_names_out(['Geography']))
+
+    input_data = pd.concat([input_data.reset_index(drop=True), geo_encoded_df], axis=1)
+    input_data_scaled = scaler.transform(input_data)
+
+    prediction = model.predict(input_data_scaled)
+    prediction_proba = prediction[0][0]
+
+    st.write(f'Churn Probability: {prediction_proba:.2f}')
+
+    if prediction_proba > 0.5:
+        st.write('The customer is likely to churn.')
+    else:
+        st.write('The customer is not likely to churn.')
